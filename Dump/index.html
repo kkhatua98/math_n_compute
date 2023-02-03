@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About the Website</title>
+    <link rel="stylesheet" id="cssfile" href="styles/lightmode.css">
+    <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <h1>Testing dark mode</h1>
+    <button id = "dmbutton"><i class='bx bx-bulb'></i>Dark Mode</button>
+    <script>
+        document.getElementById('dmbutton').addEventListener('click', function(){
+            const css = document.getElementById('cssfile');
+            const dmb = document.getElementById('dmbutton');
+
+            if (dmb.innerHTML == 'Dark Mode'){
+                css.setAttribute('href', 'styles/darkmode.css');
+                dmb.innerHTML = "Light Mode";
+            } else{
+                css.setAttribute('href', 'styles/lightmode.css');
+                dmb.innerHTML = 'Dark Mode';
+            }
+        });
+    </script>
+</body>
+</html>
