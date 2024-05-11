@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>MathJax example</title>
+
+    <!-- Linking css and javascript -->
+    <link rel="stylesheet" id="cssfile" href="styles/lightmode.css">
+    <script type="text/javascript" src="functionality.js"></script>
+
+    <!-- Linking for MathJax to load -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+
+</head>
+
+<body>
+    <!-- <button id="dmbutton" class="fixedContainer">Dark Mode</button> -->
+
+    <div class="container">
+        <!-- <ul class="toc">
+            <li class="Heading"><a href="#Section1">Introduction</a></li>
+            <li class="SubHeading"><a href="#Section11">Case 1</a></li>
+            <li class="SubHeading"><a href="#Section12">Case 2</a></li>
+            <li class="Heading"><a href="#Section2">Doing the Mathematics</a></li>
+            <li class="SubHeading"><a href="#Section21">First Axis</a></li>
+            <li class="SubHeading"><a href="#Section22">Second Axis</a></li>
+        </ul> -->
+
+        <ul class="toc">
+            <details>
+                <summary>Principal Component Analysis</summary>
+                <ul>
+                    <li class="Heading"><a href="#Section1" style="margin-top:0px;">Introduction</a></li>
+                    <li class="SubHeading"><a href="#Section11">Case 1</a></li>
+                    <li class="SubHeading"><a href="#Section12">Case 2</a></li>
+                    <li class="Heading"><a href="#Section2">Doing the Mathematics</a></li>
+                    <li class="SubHeading"><a href="#Section21">First Axis</a></li>
+                    <li class="SubHeading"><a href="#Section22">Second Axis</a></li>
+                </ul>
+            </details>
+        </ul>
+
+
+
+        <div class="content">
+
+            <h1 id="title">Binomial Logistic Regression</h1>
+
+            <p>Let \(\vec{x} = (x_1, x_2, x_3, ..., x_p)^T\) is the p dimensional independent vector and \(y\) is the
+                categorical dependent variable. For now suppose \(y\) has only two categories (for more than two
+                categories mathematics is little different). We will always represent categories by 0 and 1. In some
+                cases to do that we may have to use appropriate technic to represent categories by 0 and 1. For example,
+                if categories are boy or girl then we can represent 0 for boy and 1 for girl, alternatively 0 for girl
+                and 1 for boy.</p>
+
+            <h2> Mathematical Representation</h2>
+            <p>Now,we may try to fit a linear regression model of the form,
+                \(y_i=\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \beta_3 x_{i3} + ... + \beta_p x_{ip} + \epsilon_i\)
+                then, as all \(y\)s are not same, mix of 0 and 1, all the coefficient estimates can not be zero at the
+                same time; ie. the regression plane would have non-zero slope along some axis. So, for suitable choice
+                of \(x\) vector predicted value of y would be greater than 0, similarly for suitable choice of x
+                predicted value of y can be negative (becomes unbounded briefly said). So, what we do is, we set,</p>
+            <div>
+                \[y_i \sim Bernoulli(p_i)\],</div>
+            <p>where,</p>
+            <div> \[p_i = P(y_i = 1) = \frac{1}{1+ exp[-(\beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \beta_3 x_{i3} +
+                ... + \beta_p x_{ip})]}\]
+                and estimate the parameters by **MLE**.</div>
+
+            <h2> Coefficient Estimates by MLE</h2>
+            <h3> Form of the Log Likelihood</h3>
+            <p>Likelihood,</p>
+            <div>
+                \[\begin{aligned}
+                L &= \prod_{i=1}^nP(y_i) \\
+                &= \prod_{i=1}^np_i^{y_i}(1 - p_i)^{1 - y_i}
+                \end{aligned}\]
+            </div>
+
+            <p>So, log-likelihood,</p>
+            <div>\[\begin{aligned}
+                l &= \log L \\
+                &= \log \prod_{i=1}^np_i^{y_i}(1 - p_i)^{1 - y_i} \\
+                &= \sum_{i=1}^n y_i\log p_i + (1-y_i)\log(1-p_i) \\
+                &= \sum_{i=1}^n y_i.\log \frac{1}{1+ exp[-\vec{\beta}^T.\vec{x}_i]} + (1-y_i).\log
+                \frac{exp[-\vec{\beta}^T.\vec{x}_i]}{1+ exp[-\vec{\beta}^T.\vec{x}_i]} \\
+                &= \sum_{i=1}^n -y_i.\log (1+ exp[-\vec{\beta}^T.\vec{x}_i]) + (1-y_i).\log
+                exp[-\vec{\beta}^T.\vec{x}_i] \ - (1-y_i).\log (1+ exp[-\vec{\beta}^T.\vec{x}_i])\\
+                &= \sum_{i=1}^n -y_i.\log (1+ exp[-\vec{\beta}^T.\vec{x}_i]) - (1-y_i).\vec{\beta}^T.\vec{x}_i \ -
+                (1-y_i).\log (1+ exp[-\vec{\beta}^T.\vec{x}_i])\\
+                &= \sum_{i=1}^n - (1-y_i).\vec{\beta}^T.\vec{x}_i \ - \log (1+ exp[-\vec{\beta}^T.\vec{x}_i])\\
+                &= -\sum_{i=1}^n (1-y_i).\vec{\beta}^T.\vec{x}_i \ + \log (1+ exp[-\vec{\beta}^T.\vec{x}_i])
+                \end{aligned}
+                \]</div>
+
+            <p>We will get the solution by solving \(\frac{\partial l}{\partial \vec{\beta}} = 0\); </p>
+
+            <h3> Deriving the First Derivative</h3>
+            <p>Now,</p>
+            <div>
+                \[\begin{aligned}
+                \frac{\partial l}{\partial \vec{\beta}} &= \frac{\partial}{\partial \vec{\beta}} -\sum_{i=1}^n
+                (1-y_i).\vec{\beta}^T.\vec{x}_i \ + \log (1+ exp[-\vec{\beta}^T.\vec{x}_i]) \\
+                &= -\sum_{i=1}^n (1-y_i).\frac{\partial}{\partial \vec{\beta}} \vec{\beta}^T.\vec{x}_i \ +
+                \frac{\partial}{\partial \vec{\beta}}\log (1+ exp[-\vec{\beta}^T.\vec{x}_i]) \\
+                &= -\sum_{i=1}^n (1-y_i).\vec{x}_i \ + \frac{1}{1+
+                exp[-\vec{\beta}^T.\vec{x}_i]}.exp[-\vec{\beta}^T.\vec{x}_i].(-1).\vec{x}_i \\
+                &= -\sum_{i=1}^n (1-y_i).\vec{x}_i \ + \sum_{i=1}^n \frac{exp[-\vec{\beta}^T.\vec{x}_i]}{1+
+                exp[-\vec{\beta}^T.\vec{x}_i]}.\vec{x}_i \\
+                &= -\sum_{i=1}^n (1-y_i).\vec{x}_i \ + \sum_{i=1}^n \frac{1}{1+ exp[\vec{\beta}^T.\vec{x}_i]}.\vec{x}_i
+                \end{aligned}
+                \]</div>
+
+            <p>
+                Now, \(\frac{\partial l}{\partial \beta} = 0\) will produce global maximum, if we prove that \(l\) is
+                concave function with respect to the model coefficients, ie. the **Hessian Matrix** is negative
+                definite.</p>
+            <div>
+                \[H = \begin{pmatrix}\begin{pmatrix}\frac{\partial^2 l}{\partial \beta_n
+                \beta_m}\end{pmatrix}\end{pmatrix} = \frac{\partial }{\partial \vec{\beta}}\left[\frac{\partial
+                l}{\partial \vec{\beta}}\right]^T < 0\]</div>
+
+
+                    <h3> Deriving the Hessian Matrix</h3>
+                    <p>Here,</p>
+                    <div>
+                        \[\begin{aligned}
+                        H &= \frac{\partial }{\partial \vec{\beta}}\left[\frac{\partial l}{\partial
+                        \vec{\beta}}\right]^T \\
+                        &= \frac{\partial }{\partial \vec{\beta}} \left[-\sum_{i=1}^n (1-y_i).\vec{x}_i \ + \sum_{i=1}^n
+                        \frac{1}{1+ exp[\vec{\beta}^T.\vec{x}_i]}.\vec{x}_i \right]^T \\
+                        &= -\frac{\partial }{\partial \vec{\beta}} \sum_{i=1}^n (1-y_i).\vec{x}_i^T \ + \frac{\partial
+                        }{\partial \vec{\beta}}\sum_{i=1}^n \frac{1}{1+ exp[\vec{\beta}^T.\vec{x}_i]}.\vec{x}_i^T \\
+                        &= 0 \ \ + \sum_{i=1}^n \left[\frac{\partial }{\partial \vec{\beta}} \frac{1}{1+
+                        exp[\vec{\beta}^T.\vec{x}_i]}\right].\vec{x}_i^T \\
+                        &= \sum_{i=1}^n \left[ \frac{-1}{\left(1+
+                        exp[\vec{\beta}^T.\vec{x}_i]\right)^2}.exp[\vec{\beta}^T.\vec{x}_i].\vec{x}_i\right]\vec{x}_i^T
+                        \\
+                        &= -\sum_{i=1}^n \frac{1}{1+
+                        exp[\vec{\beta}^T.\vec{x}_i]}.\frac{exp[\vec{\beta}^T.\vec{x}_i]}{1+
+                        exp[\vec{\beta}^T.\vec{x}_i]}.\vec{x}_i.\vec{x}_i^T \\
+                        &= -\sum_{i=1}^n \frac{exp[-\vec{\beta}^T.\vec{x}_i]}{1+
+                        exp[-\vec{\beta}^T.\vec{x}_i]}.\frac{1}{1+ exp[-\vec{\beta}^T.\vec{x}_i]}.\vec{x}_i.\vec{x}_i^T
+                        \\
+                        &= -\sum_{i=1}^n p_i.(1-p_i).\vec{x}_i.\vec{x}_i^T \\
+                        &= -\sum_{i=1}^n \sqrt{p_i.(1-p_i)}.\vec{x}_i.\sqrt{p_i.(1-p_i)}.\vec{x}_i^T \\
+                        &= -\sum_{i=1}^n \vec{x^*}_i .\vec{x^*}_i^T \ \ \leq \ \ 0
+                        \end{aligned}\]</div>
+
+
+                    <p>
+                        Here, \(\vec{x^*}_i = \sqrt{p_i.(1-p_i)}.\vec{x}_i\). The last equality holds for the fact that
+                        \(\vec{x^*}_i .\vec{x^*}_i^T\) is positive definite and sum of positive definite metrices is
+                        positive definite.</p>
+                    <p>
+                        Now if we set \(\frac{\partial l}{\partial \beta_m} = 0\), we cannot get explicit form of
+                        \(\beta\) due the complicated form of \(\frac{\partial l}{\partial \beta_m}\), so to get the
+                        solution we have to use numerical methods.</p>
+
+                    <div class="navigator">
+                        <span><a href="#">&#8249;</a><span style="margin-left:5px">Logistic Regression</span></span>
+                        <span style="margin-right:5px"><span>Logistic Regression</span><a href="#">&#8250;</a></span>
+                    </div>
+
+
+
+            </div>
+        </div>
+
+
+</body>
+
+</html>

@@ -1,74 +1,63 @@
 body{
     margin:0px;
-    /* display:flex;
-    flex-grow:1; */
 }
 .container{
     display:flex;
     height:100vh;
 }
-/* To create TOC this link is followed: 
-https://css-tricks.com/how-to-animate-the-details-element/#:~:text=Turn%20off%20the%20default%20triangle%3A%20details%20summary%3A%3A-webkit-details-marker%20%7B,rotate%20%2890deg%29%3B%20%7D.%20This%20only%20animates%20the%20triangle. */
-
-.toc_sidebar{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-shrink:0;
-    width:15px;
-    background: #bdbcbc;
-    color:#565656
-}
-.toc_sidebar:hover {
-    background: rgb(222, 221, 221);
-    color:rgb(130, 130, 130)
-}
 .toc{
     /* background: rgb(22, 22, 22); */
     background: #222;
     font-weight:bold;
-    /* width:400px; */
-    width:25%;
+    width:370px;
     flex-shrink:0;
     padding-top:50px;
     padding-left:0px;
     margin:0px;
     /* list-style:none; */
     /* position:absolute; */
-    /* display:flex; */
-    overflow-y:scroll;
-    /* overflow-x:hidden; */
-    /* flex-wrap:wrap; */
 }
 .toc details {
   margin: 0 auto ;
-  padding:0;
   background: #282828;
   margin-bottom: .5rem;
   box-shadow: 0 .1rem 1rem -.5rem rgba(0,0,0,.4);
-  /* border-radius: 5px; */
+  border-radius: 5px;
   overflow: hidden;
 }
 .toc summary {
   padding: 1rem;
-  padding-left:20px;
   display: block;
   background: #333;
-  /* padding-left: 2.2rem; */
+  padding-left: 2.2rem;
   position: relative;
   cursor: pointer;
   font-family:Verdana, Geneva, Tahoma, sans-serif;
   color:rgb(194, 191, 191);
 }
+/* .toc summary {
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    background: #282828;
+    color:rgb(194, 191, 191);
+    box-shadow: 0 .1rem 1rem -.5rem rgba(0,0,0,.4);
+    padding-left:20px;
+    padding-top:20px;
+    padding-bottom:20px;
+    /* margin-top:15px; */
+    /* font-size:large;
+    border-radius: 5px;
+    border-color:282828; */
+/* } */
 .toc summary:hover {
     background: white;
     color:black
+    /* display:block; */
+
 }
 .toc ul {
     list-style:none;
     padding-left:0px;
     margin-top:0px;
-    padding-bottom:10px
 }
 .toc li{
     font-family:Verdana, Geneva, Tahoma, sans-serif;
@@ -79,10 +68,12 @@ https://css-tricks.com/how-to-animate-the-details-element/#:~:text=Turn%20off%20
     cursor:pointer;
     transition: all 0.2s ease;
     display:block;
-    color:rgb(158, 153, 153)
+    /* color:rgb(158, 153, 153) */
 }
 .toc li:hover a{
     background: white;
+    /* display:block; */
+
 }
 .Heading a{
     padding-left:40px;
@@ -91,14 +82,9 @@ https://css-tricks.com/how-to-animate-the-details-element/#:~:text=Turn%20off%20
     margin-top:15px;
 }
 .SubHeading a{
-    padding-left:60px;
+    padding-left:55px;
     padding-top:7px;
     padding-bottom:7px;
-}
-.SubSubHeading a{
-    padding-left:90px;
-    padding-top:4px;
-    padding-bottom:4px;
 }
 
 
@@ -112,11 +98,70 @@ https://css-tricks.com/how-to-animate-the-details-element/#:~:text=Turn%20off%20
     flex-wrap: wrap;
     justify-content: space-around;
 }
-.content p, h1, h2, h3, h4, h5, div, ul, details{
+.content p, h1, h2, h3, h4, div, ul, details{
     width:100%;
     text-align:left;
 }
 
+@media (max-width: 35em){
+    .primary-navigation{
+        position:fixed;
+        inset: 0 0 0 50%;
+
+        flex-direction: column;
+        display:table-cell;
+
+        padding-top:5em;
+        padding-right:0;
+        padding-left:0;
+
+        margin:0;
+
+        background: hsl(0 0% 100% / 0.1);
+        transform: translateX(100%);
+        transition: transform 350ms ease-in;
+    }
+
+    .primary-navigation[data-visible="true"]{
+        transform: translateX(0%);
+    }
+    .primary-navigation li{
+        line-height: 4em;
+        padding-left:2em;
+        margin-top:0;
+        margin-bottom:0;
+        /* padding-top:0;
+        padding-bottom:0; */
+    }
+    /* ul.primary-navigation > li :hover */
+    li:hover{
+        width:100%;
+        /* background-color:aliceblue; */
+        background-color:rgba(233, 231, 231, 0.1);
+        border-radius: 0.2em;
+    }
+
+    .mobile-nav-toggle {
+        display: block;
+        position:absolute;
+        z-index: 9999;
+        /* background: url('C:\\Users\\kaust\\Desktop\\website\\nav_menu.png'); */
+        background-repeat: no-repeat;
+        background-size: cover;
+        width: 1.5rem;
+        aspect-ratio: 1;
+        top:2rem;
+        right: 2rem;
+    }
+
+    #dmbutton{
+        /* position:absolute; */
+        z-index: 9999;
+        position: fixed;
+        right: 10px;
+        bottom: 4px;
+    }
+}
 .wrap{
     overflow-x: auto;
     overflow-y:hidden;
@@ -171,7 +216,6 @@ img {
 details {
     user-select: none;
     background-color: hsl(214, 23%, 94%);
-    padding:8px;
   }
   
   details>summary span.icon {
@@ -192,6 +236,9 @@ details {
   
   summary::-webkit-details-marker {
     display: none;
+  }
+  details>p{
+    background-color: rgb(53, 48, 48);
   }
 
 /* This previous and next navigator is written by taking codes from this link: https://programmersportal.com/create-previous-and-next-buttons-in-html-css/ */
@@ -214,21 +261,4 @@ div.navigator{
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
-}
-
-/* @media (max-width: 1024px) {
-    .toc  {
-        display: none;
-    }
-} */
-@media screen and (max-width:990px) {
-    /* .container { flex-wrap: wrap;  } */
-    /* .item:first-child { flex-basis: 100%; } */
-    .toc { flex-basis: 5%; }
-    .toc details {display: none;}
-    div.toc_sidebar{transform: rotate(180deg);}
-}
-.toc::-webkit-scrollbar {
-    width: 0px;
-    background: transparent; /* make scrollbar transparent */
 }
