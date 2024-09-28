@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>PCA</title>
+
+    <!-- Linking css and javascript -->
+    <link rel="stylesheet" id="cssfile" href="../styles/lightmode.css">
+    <script type="text/javascript" src="../scripts/functionality.js"></script>
+
+    <!-- Linking for MathJax to load -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+
+</head>
+
+<body>
+    <!-- <button id="dmbutton" class="fixedContainer">Dark Mode</button> -->
+
+    <div class="container">
+        <script language="javascript" type="text/javascript" src="toc.txt"></script>
+
+        
+
+
+
+        <div class="content">
+            <script language="javascript" type="text/javascript" src="mini_toc.txt"></script>
+
+            <div class="actual_content">
+
+                <h1 id="title">Principal Component Analysis</h1>
+                <p>Get overall idea of PCA, learn how the mathematics behind it works applying the concepts of rotation of
+                    axes, eigen value and eigen vectors. Finally code everything from scratch and satisfy yourself seeing
+                    our output matches with scikit-learn!</p>
+    
+    
+                <h2 id="Section1">Introduction</h2>
+                <p>Suppose our \(n\) feature vectors \(\vec{x}_1, \ \vec{x}_2, \ \vec{x}_3, \ ...,\ \vec{x}_n\) are 2
+                    dimensional. As, we always prefer to create model with fewer number of variables whenever possible, we
+                    want to drop one among the two regressors. Now consider, two cases,</p>
+    
+                <h3 id="Section11">Case 1</h3>
+                <p>
+                    <img src="PCA_Original.png" style="object-fit:cover">
+                    We see that, variance in x_2 is much less than x_1; ie. x_2 remain more or less same even if the
+                    dependent variable \(y\) changes. In simple terms \(y\) does not dependent on x_2 as it depends on x_1.
+                    Here we can even say that, it does not depend at all (with little risk). So, we can safely drop it.
+                </p>
+    
+                <h3 id="Section12">Case 2</h3>
+                <p>
+                    Now suppose now scatter plot x_1 vs x_2 looks like this,
+                    <img src="PCA_Rotated.png">
+                    Here we cannot say that variance of one variable is much less than the other, there is enough variance
+                    in both of the axis. But suppose we are desparate to drop one of the variable. If we consider the red
+                    arrow direction in the picture, we see that in this direction variation is much less than the blue arrow
+                    direction. This observation is the key to the Principal Component Analysis. If we rotate our axis so
+                    that our x_1 axis meets blue arrow and the x_2 axis meets the red arrow, then in the resulting rotated
+                    axis we can drop the rotated x_2 axis. Also we can rotate so that we drop the x_1 axis. But we take the
+                    approach to drop the later variable (x_2). If we generalise the above concept for multivariate set up,
+                    we get,
+    
+                    <span style="font-weight:bold">Rotate the original axes so that variance of the first rotated axis >
+                        variance of the next rotated axis > ... and so on.</span>
+                </p>
+    
+                <h2 id="Section2">Doing the Mathematics</h2>
+                <p>
+                    Suppose \(\vec{x}\) is our p dimensional feature vector with sample variance covariance matrix
+                    \(\Sigma\). We want to rotate our original axes, ie. we want a orthogonal matrix \(Q\) (ie. \(Q^TQ =
+                    I\)) such that,</p>
+                
+                <p class="wrap">
+    
+                    \[Q.\vec{x} = \begin{pmatrix} \vec{Q_1} \\ \vec{Q_2} \\ \vec{Q_3} \\ . \\ . \\ . \\ \vec{Q_p}
+                    \end{pmatrix}.\vec{x} = \begin{pmatrix} \vec{Q_1}.\vec{x} \\ \vec{Q_2}.\vec{x} \\ \vec{Q_3}.\vec{x} \\ .
+                    \\ . \\ . \\ \vec{Q_p}.\vec{x} \end{pmatrix} = \begin{pmatrix} P_1\\ P_2 \\ P_3 \\ . \\ . \\ . \\ P_n
+                    \end{pmatrix} = \vec{P}\]
+                </p>
+    
+                <p>
+                    Here \(Q_i\)s are row vectors and \(P_i\)s are scalar.
+                </p>
+    
+                <p>
+                    Now we have to determine a \(Q\) so that in \(P\), 
+                    <div class="wrap">
+                        \[var(P_1) > var(P_2) > var(P_3) > ... > var(P_p)\]
+                    </div>
+                </p>
+    
+                <p>
+                    <span style="font-weight:bold">Note:</span> Here sum of variances of \(P_i\)s and sum of variances of
+                    the original \(x_i\) are same. As,
+                </p>
+    
+                <div class="wrap">
+                    \[\sum_{i=1}^{p} var(P_i) = Trace(var(Q.\vec{x})) = Trace(Q\Sigma Q^T) = Trace(Q^TQ\Sigma) =
+                    Trace(\Sigma) = \sum_{i=1}^p var(x_i)\]
+                </div>
+    
+                <p>\(\Sigma\) is the variance covariance matrix of \(\vec{x}\).</p>
+    
+                <h3 id="Section21" style="margin-top:5%">Getting First Axis</h3>
+                <h4 style="margin-top:1%">Variance of \(P_1\)</h4>
+                <p>
+                    We know that \(\Sigma \) is a variance covariance matrix, hence it is positive definite, and we can
+                    eigen decompose it. Using this decomposition if we calculate variance of \(P_1\) we will get,
+                </p>
+    
+    
+                <div class="wrap">
+                    \begin{align*}
+                    var(P_1) &= var(\vec{Q}^T_1.\vec{x}) \\
+                    &= \vec{Q}^T_1.var(\vec{x}).\vec{Q_1} \\
+                    &\left.\begin{aligned}
+                    &= \vec{Q}^T_1.\Sigma \vec{Q_1} \\
+                    &= \vec{Q}^T_1ED_{\lambda}E^T\vec{Q_1}
+                    \end{aligned} \hspace{7mm} \right\} \hspace{2mm} \text{----- by Eigendecomposition of $\Sigma$} \\
+                    &= A^TD_{\lambda}A \\
+                    &= \sum_{i=1}^p \lambda_ia_i^2 \hspace{9mm} \text{as $D_{\lambda}$ is diagonal}
+                    \end{align*}
+                </div>
+    
+    
+    
+                <p>Here,</p>
+                <ul style="list-style-type:none">
+                    <li>\(A^T = \vec{Q}^T_1E = (a_1, a_2, a_3, ..., a_p)\) (note, this is a row vector, \(\vec{Q}_1^T\) is a row, \(E\) is matrix, so \(A\) is row)</li>
+                    <li>\(D_{\lambda} =\) Diagonal matrix of eigen values \(= diag(\lambda_1, \lambda_2, \lambda_3, ... ,
+                        \lambda_p)\) </li>
+                    <li>\(E =\) Orthogonal matrix of eigen vectors \(= (\vec{e}_1, \vec{e}_2, \vec{e}_3, ..., \vec{e}_p)\), where \(e_i\) is the
+                        eigen vector corresponding to \(\lambda_i\) and, </li>
+                </ul>
+    
+                <h4>Maximum Possible Value of \(var(P_1)\)</h4>
+    
+                <div>
+                    \begin{align*}
+                    var(P_1)
+                    &= \sum_{i=1}^p \lambda_ia_i^2 \\
+                    &\le \lambda_{hi}\sum_{i=1}^{p}a_i^2 \\
+                    &= \lambda_{hi}.1 \\
+                    &= \lambda_{hi}
+                    \end{align*}
+                </div>
+                <p>Here,</p>
+                <ul style="list-style-type:none">
+                    <li>\(\sum_{i=1}^pa_i^2 = A^T.A = \underbrace{\vec{Q}^T_1.E.E^T\vec{Q}_1 = \vec{Q}^T_1.I.\vec{Q}_1}_{\text{$E$ is orthogonal matrix}} = \vec{Q}^T_1.\vec{Q}_1 = 1\), </li>
+                    <li>\(hi\), is the index for which \(\lambda\) is maximum.</li>
+                </ul>
+                <p>So, the maximum possible value of \(var(P_1)\) is the highest eigenvalue. So now our aim just narrows down to finding a \(\vec{Q}_1\) for which \(var(\vec{Q}_1.x)\) is \(\lambda_{h_i}\)</p>
+    
+                <h4>Finding \(\vec{Q}_1\)</h4>
+                <p>We remember that \(var(P_1) = \sum_{i=1}^p \lambda_ia_i^2\). Now this quantity will become \(\lambda_{hi}\) if we put 0s in place of all the \(a_i\)s except for \(a_{hi}\) and 1 in place of \(a_{hi}\). In this case \(A\) will look like: \( (0, 0, ..., 1, 0, ...,0)\), where 1 is at \(hi\) index.</p>
+    
+                <p>Now please note that, \(A^T=\vec{Q}^T_1E\), now if we put \(\vec{Q}_1=\vec{e}_{hi}\), then \(A^T=\vec{e}^T_{hi}E\). Now \(e_i\)s are orthogonal to each other, ie. \(\vec{e}_i^T\vec{e}_j=0\) for all \(i \neq j\). So, in this case \(A\) will become \((0, 0, ..., 1, 0, ...,0)\) which we were trying to get. So, we finally get that</p>
+    
+                <div>\[\vec{Q}_1=\vec{e}_{hi}\]</div>
+                <p>where, \(hi\) is the index for which \(\lambda\) is maximum.</p>
+    
+                <details>
+                    <summary>
+                        <span>We can calculate the variance of \(e_{hi}^T\vec{x}\) and can see that it is \(\lambda_{hi}\)</span>
+                        <span class="icon">👇</span>
+                    </summary>
+                    <p>
+                        <div class="wrap">
+                            \begin{align*}
+                            var(E_{i}^T.\vec{x})
+                            &= E_{i}^T\Sigma E_{i} \\
+                            &= E_{i}^TED_{\lambda}E^TE_{i} \\
+                            &= E_{i}^T(E_1 \ E_2 \ ... \ E_{i} \ ... \ E_p)D_{\lambda}\begin{pmatrix}E_1^T \\ E_2^T \\ . \\ . \\
+                            E_{i}^T \\ . \\ . \\ . \\ E_p^T\end{pmatrix}E_{i}\\
+                            &= \vec{e}_{i}^TD_{\lambda}\vec{e}_{i} = \lambda_{i}
+                            \end{align*}
+                        </div>
+                        <hr>
+                    </p>
+                </details>
+    
+    
+    
+    
+    
+                <h3 id="Section22">Getting the Second Axis</h3>
+    
+                <h4 style="margin-top:1%">Variance of \(P_2\)</h4>
+                <p>If we calculate variance of \(P_2\) using same decomposition logic we will get,</p>
+    
+                <div class="wrap">
+                    \begin{align*}
+                    var(P_2) &= var(\vec{Q}^T_2.\vec{x}) \\
+                    &= \vec{Q}^T_2.\Sigma.\vec{Q}_2 \\
+                    &= \vec{Q}^T_2ED_{\lambda}E^T.\vec{Q}_2 \\
+                    &= \vec{Q}^T_2.(\vec{e}_1 \ \ \vec{e}_2 \ ... \ \vec{e}_{hi} \ ... \ \vec{e}_p)D_{\lambda}\begin{pmatrix}\vec{e}_1^T \\ \vec{e}_2^T \\ . \\ . \\
+                    \vec{e}_{hi}^T \\ . \\ . \\ \vec{e}_p^T\end{pmatrix}.\vec{Q}_2 \\
+                    &= (\vec{Q}^T_2.\vec{e}_1 \ \ \ \vec{Q}^T_2.\vec{e}_2 \ \ \ .. \ \ \ \vec{Q}^T_2\vec{e}_{hi} \ ... \
+                    \vec{Q}^T_2\vec{e}_p)D_{\lambda}\begin{pmatrix}\vec{e}_1^T.\vec{Q}_2 \\ \vec{e}_2^T.\vec{Q}_2. \\ . \\ . \\ \vec{e}_{hi}^T.\vec{Q}_2 \\ . \\ .
+                    \\ . \\ \vec{e}_p^T.\vec{Q}_2.\end{pmatrix} \\
+                    &=(\vec{Q}_2^T.\vec{e}_1 \ \ \ \vec{Q}^T_2.\vec{e}_2 \ \ \ ... \ \ \ 0 \ ... \
+                    \vec{Q}_2^T\vec{e}_p)D_{\lambda}\begin{pmatrix}\vec{e}_1^T.\vec{Q}_2 \\ \vec{e}_2^T.\vec{Q}_2. \\ . \\ . \\ 0 \\ . \\ .
+                    \\ . \\ \vec{e}_p^T.\vec{Q}_2.\end{pmatrix} \\
+                    &=\bar{A}^T D_{\lambda}\bar{A} \\
+                    &=\sum_{i=1, i \neq hi}^p {\lambda}_i \bar{a}_i^2 
+                    \end{align*}
+                </div>
+    
+                <p>where, 
+                    <ul style="list-style-type:none">
+                        <li>\(\lambda_{hi_2}\) is the second highest eigen value and \(hi_2\) is the index of it</li>
+                        <li>\(\sum_{i=1 \\
+                            i \neq hi}^p \bar{a}_i^2 = \bar{A}^T.\bar{A} = \underbrace{\vec{Q}^T_2.E.E^T\vec{Q}_2 = \vec{Q}_2^T.I.\vec{Q}_2}_{\text{$E$ is orthogonal matrix}} = \vec{Q}_2^T.\vec{Q}_2 = 1\)
+                        </li>
+                        <li>\(h_i\)th element of \(\bar{a}\) ie. \(a_{hi}\) is 0 as \(a_{hi} = \vec{Q}^T_2\vec{e}_{hi} = \vec{Q}^T_2.\vec{Q}_1 = 0\), as \(Q\) is orthogonal matrix so, \(Q_1\) is orthogonal to \(Q_2\).</li>
+                    </ul>
+                </p>
+    
+    
+                <h4>Maximum Possible Value of \(var(P_2)\)</h4>
+                <div class="wrap">
+                    \begin{align*}
+                    var(P_2) &=\sum_{i=1, i \neq hi}^p {\lambda}_i \bar{a}_i^2 \\
+                    &\le \lambda_{hi_2}\sum_{i=1, i \neq hi}^p \bar{a}_i^2 \\
+                    &= \lambda_{hi_2}.1 \\
+                    &= \lambda_{hi_2}
+                    \end{align*}
+                </div>
+    
+                <p>So, highest possible value is the second highest eigen value.</p>
+    
+                <h4>Finding \(\vec{Q}_2\)</h4>
+                <p>In the same fashion as \(Q_1\) we can find \(Q_2\). If we use the same logics we will find that,</p>
+                <div>\[\vec{Q}_2=\vec{e}_{hi_2}\]</div>
+                <p>where, \(hi_2\) is the index for which \(\lambda\) is second highest.</p>
+    
+                <details>
+                    <summary>
+                        <span>We can calculate the variance of \(e_{hi_2}^T\vec{x}\) and can see that it is \(\lambda_{hi_2}\)</span>
+                        <span class="icon">👇</span>
+                    </summary>
+                    <p>
+                        <div class="wrap">
+                            \begin{aligned}
+                            var(\vec{e}_{hi_2}^T.\vec{x})
+                            &= \vec{e}_{hi_2}^T\Sigma \vec{e}_{hi_2} \\
+                            &= \vec{e}_{hi_2}^TED_{\lambda}E^T\vec{e}_{hi_2} \\
+                            &= \vec{e}_{hi_2}^T(\vec{e}_1 \ \ \ \vec{e}_2 \ \ \ \vec{e}_3 \ ... \ \vec{e}_{hi_2} \ ... \ \vec{e}_p)D_{\lambda}\begin{pmatrix}\vec{e}_1^T \\ \vec{e}_2^T \\
+                            \vec{e}_3^T \\ . \\ . \\ \vec{e}_{hi_2}^T \\ . \\ . \\ . \\ \vec{e}_p^T\end{pmatrix}\vec{e}_{hi_2} \\
+                            &= \vec{1}_{hi_2}^TD_{\lambda}\vec{1}_{hi_2} \hspace{1cm} \text{as \(\vec{e}_i\)s orthogonal to each other} \\
+                            &= \lambda_{hi_2}
+                            \end{aligned}
+    
+                            Here, only \(hi_2\)th entry of \(1_{hi_2}\) is 1, rest are 0.
+                        </div>
+                        <hr>
+                    </p>
+                </details>
+    
+                <div class="navigator">
+                    <span><a href="Multinomial_Logistic_Regression.html">&#8249;</a><span style="margin-left:5px">Multinomial Logistic Regression</span></span>
+                    <span style="margin-right:5px"><span>Next section</span><a href="#">&#8250;</a></span>
+                </div>
+            </div>
+
+
+
+            
+        </div>
+    </div>
+
+
+</body>
+
+</html>

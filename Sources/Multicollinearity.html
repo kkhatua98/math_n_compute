@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Multicollinearity</title>
+
+    <!-- Linking css and javascript -->
+    <link rel="stylesheet" id="cssfile" href="../styles/lightmode.css">
+    <script type="text/javascript" src="../scripts/functionality.js"></script>
+
+    <!-- Linking for MathJax to load -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+    </script>
+
+</head>
+
+<body>
+    <!-- <button id="dmbutton" class="fixedContainer">Dark Mode</button> -->
+
+    <div class="container">
+        <script language="javascript" type="text/javascript" src="toc.txt"></script>
+
+        
+
+
+
+        <div class="content">
+            <script language="javascript" type="text/javascript" src="mini_toc.txt"></script>
+
+            <div class="actual_content">
+                <h1>Why Multicollinearity Increases Variance of Coefficient Estimates</h2>
+
+                <h2 id="Section1">Variance of Coefficient Estimates</h2>
+                <p>We know that for the model, \(Y=X\vec{\beta}+\vec{\epsilon}\) coefficient estimates
+                \(\hat{\vec{\beta}}\) has variance,</p>
+                <div class="wrap">\[var(\hat{\vec{\beta}})=\sigma^2(X^TX)^{-1}\]</div>
+                
+                <p>Now, let us assume that multicollinearity is present in the variables \(x_1,...,x_p\) and all of them
+                are involved in it. So, in simple terms it means that, if we fit linear regression of any of the
+                \(x_i\)s on rest of the \(x\)s then the quality of the fit will be very good. Now, We have to prove
+                that this good fit somehow increases the variance of the coefficient estimates, or it increases the
+                values of the diagonal elements of \(var(\hat{\vec{\beta}})\).</p>
+
+                <p>We will go about this problem in this way, we will try to deduce the diagonal elements of
+                \(var(\hat{\vec{\beta}})\) in such a form that, where there will be a term which increases due the
+                good regression fit between \(x\) variables.</p>
+    
+                <h2 id="Section2">Deducing Diagonal Elements of \(var(\hat{\vec{\beta}})\)</h2>
+                <p>We will do the calculation for \(x_1\) and show that the first diagonal element of
+                \(var(\hat{\beta})\) is getting increased because of the good regression fit between \(x_1\) and
+                other \(x\) variables. To show that variance is increasing for rest of the variables what we can do
+                is that, we will swap \(x_1\) with other \(x\)s one by one.</p>
+                <div class="wrap">\[\begin{aligned}
+                var(\hat{\vec{\beta}}) &= \sigma^2(X^TX)^{-1} \\
+                \\
+                &=\sigma^2\begin{bmatrix}\begin{pmatrix}\vec{x}_1^T \\
+                \vec{x}_2^T \\
+                . \\
+                . \\
+                . \\
+                \vec{x}_p^T\end{pmatrix}
+                \begin{pmatrix}
+                \vec{x}_1 \ \ \ \ \vec{x}_2 \ \ \ \ ... \ \ \ \ \vec{x}_p
+                \end{pmatrix}
+                \end{bmatrix}^{-1} \\
+                \\
+                &=\sigma^2\begin{pmatrix}\vec{x}_1^T\vec{x}_1 \ \ \ \ \vec{x}_1^T\vec{x}_2 \ \ \ \ ... \ \ \ \
+                \vec{x}_1^T\vec{x}_p \\
+                \vec{x}_2^T\vec{x}_1 \ \ \ \ \vec{x}_2^T\vec{x}_2 \ \ \ \ ... \ \ \ \ \vec{x}_2^T\vec{x}_p \\
+                . \\
+                . \\
+                . \\
+                \vec{x}_p^T\vec{x}_1 \ \ \ \ \vec{x}_p^T\vec{x}_2 \ \ \ \ ... \ \ \ \ \vec{x}_p^T\vec{x}_p \\
+                \end{pmatrix}^{-1} \\
+                \\
+                &=\sigma^2\begin{pmatrix}\vec{x}_1^T\vec{x}_1 & \vec{x}_1^TX_{(1)} \\
+                X_{(1)}^T\vec{x}_1 & X_{(1)}^TX_{(1)}\end{pmatrix}^{-1}
+                \end{aligned}\]</div>
+                <p>If we calculate the above inverse matrix and get the frist diagonal element, we will get the variance
+                of \(x_1\).</p>
+
+                <p>Now for any block matrix,</p>
+                <div class="wrap">\[ P=\begin{bmatrix} A & B \\ C & D\end{bmatrix}^{-1}=\begin{bmatrix}\left( A- B
+                D^{-1} C\right)^{-1} & -\left( A- B D^{-1} C\right)^{-1} B D^{-1} \\ - D^{-1} C\left( A- B D^{-1}
+                C\right)^{-1} & D^{-1}+ D^{-1} C\left( A- B D^{-1} C\right)^{-1} B D^{-1}\end{bmatrix}\]</div>
+    
+                <p>If we put, \(A=\vec{x}_1^T\vec{x}_1\), \(B=\vec{x}_1^TX_{(1)}\), \(C=X_{(1)}^T\vec{x}_1\) and
+                \(D=X_{(1)}^TX_{(1)}\), we will get \(var(\hat{\vec{\beta}})\). Now in this expression our interest
+                is only on \(\left( A- B D^{-1} C\right)^{-1}\). If we replace \(A, B, C, D\) with their appropriate
+                values we will get,</p>
+                <div class="wrap">\[\begin{aligned}
+                &\left( A- B D^{-1} C\right)^{-1} \\
+                =& \
+                \left[\vec{x}_1^T\vec{x}_1-\vec{x}_1^TX_{(1)}\left[X_{(1)}^TX_{(1)}\right]^{-1}X_{(1)}^T\vec{x}_1\right]^{-1}
+                \\
+                = & \
+                \left[\vec{x}_1^T\vec{x}_1-  \vec{x}_1^TX_{(1)}\left[X_{(1)}^TX_{(1)}\right]^{-1}X_{(1)}^T\vec{x}_1 - 
+                \underbrace{
+                \left[\left(X_{(1)}^TX_{(1)}\right)^{-1}X_{(1)}^T\vec{x}_1\right]^TX_{(1)}^T\vec{x}_1}_{subtracting}
+                +
+                \underbrace{\left[\left(X_{(1)}^TX_{(1)}\right)^{-1}X_{(1)}^T\vec{x}_1\right]^TX_{(1)}^T\vec{x}_1}_{adding}\right]^{-1}
+                \\
+                = & \
+                \left[\vec{x}_1^T\vec{x}_1-\vec{x}_1^TX_{(1)}\left[X_{(1)}^TX_{(1)}\right]^{-1}X_{(1)}^T\vec{x}_1 -
+                \left[\left(X_{(1)}^TX_{(1)}\right)^{-1}X_{(1)}^T\vec{x}_1\right]^TX_{(1)}^T\vec{x}_1 +
+                \left[\left(X_{(1)}^TX_{(1)}\right)^{-1}X_{(1)}^T\vec{x}_1\right]^T\left(X_{(1)}^TX_{(1)}\right)\left(X_{(1)}^TX_{(1)}\right)^{-1}X_{(1)}^T\vec{x}_1\right]^{-1}
+                \\
+                = & \
+                \left[\vec{x}_1^T\vec{x}_1-\vec{x}_1^TX_{(1)}\left[X_{(1)}^TX_{(1)}\right]^{-1}X_{(1)}^T\vec{x}_1 -
+                \vec{x}_1^TX_{(1)}\left(X_{(1)}^TX_{(1)}\right)^{-1}X_{(1)}^T\vec{x}_1 +
+                \left[\left(X_{(1)}^TX_{(1)}\right)^{-1}X_{(1)}^T\vec{x}_1\right]^T\left(X_{(1)}^TX_{(1)}\right)\left(X_{(1)}^TX_{(1)}\right)^{-1}X_{(1)}^T\vec{x}_1\right]^{-1}
+                \\
+                = \ & \left[\vec{x}_1^T\vec{x}_1 - \vec{x}_1^TX_{(1)}\hat{\vec{\beta}}_{(1)}-
+                \vec{x}_1^TX_{(1)}\hat{\vec{\beta}}_{(1)}+\hat{\vec{\beta}}_{(1)}^T\left(X_{(1)}^TX_{(1)}\right)\hat{\vec{\beta}}_{(1)}\right]^{-1}
+                \\
+                = \ & \left[\vec{x}_1^T\left(\vec{x}_1-X_{(1)}\hat{\vec{\beta}}_{(1)}\right) -
+                \underbrace{\left(\vec{x}_1^T-\hat{\vec{\beta}}_{(1)}^TX_{(1)}^T\right)}_{a}\underbrace{X_{(1)}\hat{\vec{\beta}}_{(1)}}_{b}\right]^{-1}
+                \\
+                = \ & \left[\vec{x}_1^T\left(\vec{x}_1-X_{(1)}\hat{\vec{\beta}}_{(1)}\right) -
+                \underbrace{\hat{\vec{\beta}}_{(1)}^TX_{(1)}^T\left(\vec{x}_1-X_{(1)}\hat{\vec{\beta}}_{(1)}\right)}_{\text{swap
+                a, b as both are vectors}}\right]^{-1} \\
+                = \ &
+                \left[\left(\vec{x}_1^T-\hat{\vec{\beta}}_{(1)}^TX_{(1)}^T\right)\left(\vec{x}_1-X_{(1)}\hat{\vec{\beta}}_{(1)}\right)\right]^{-1}
+                \\
+                = & \
+                \left[\left(\vec{x}_1-X_{(1)}\hat{\vec{\beta}}_{(1)}\right)^T\left(\vec{x}_1-X_{(1)}\hat{\vec{\beta}}_{(1)}\right)\right]^{-1}
+                \\
+                = & \ \frac{1}{\text{SSE of regression of \(x_1\) on rest of the xs}}
+                \end{aligned}
+                \]</div>
+
+                <p>Now as the quality of regression between \(x_1\) and other \(x\) s are good so the SSE would be
+                small, and for this reason the above term or the first diagonal matrix of the variance matrix or
+                variance of \(x_1\) increases.</p>
+
+                <div class="navigator">
+                    <span><a href="#">&#8249;</a><span style="margin-left:5px">Home</span></span>
+                    <span style="margin-right:5px"><span>Binomial Logistic Regression</span><a href="Logistic_Regression/Binomial_Logistic_Regression.html">&#8250;</a></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>

@@ -26,23 +26,23 @@ https://css-tricks.com/how-to-animate-the-details-element/#:~:text=Turn%20off%20
 }
 .toc{
     /* background: rgb(22, 22, 22); */
+    width:25%;
+    flex-shrink:0;
+    overflow-y:scroll;
     display:flex;
+    /* flex-wrap:wrap; */
     flex-direction: column;
     background: #222;
     font-weight:bold;
     /* width:400px; */
-    width:25%;
-    flex-shrink:0;
     padding-top:20px;
     padding-left:0px;
     margin:0px;
     /* list-style:none; */
     /* position:absolute; */
     /* display:flex; */
-    overflow-y:scroll;
     /* overflow-x:hidden; */
-    /* flex-wrap:wrap; */
-    scrollbar-width: none;
+    /* scrollbar-width: none; */
 }
 .toc_copy{
     /* background: rgb(22, 22, 22); */
@@ -74,7 +74,7 @@ https://css-tricks.com/how-to-animate-the-details-element/#:~:text=Turn%20off%20
   margin-bottom: .5rem;
   box-shadow: 0 .1rem 1rem -.5rem rgba(0,0,0,.4);
   /* border-radius: 5px; */
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 .toc_copy details {
     margin: 0 auto ;
@@ -83,7 +83,7 @@ https://css-tricks.com/how-to-animate-the-details-element/#:~:text=Turn%20off%20
     margin-bottom: .5rem;
     box-shadow: 0 .1rem 1rem -.5rem rgba(0,0,0,.4);
     /* border-radius: 5px; */
-    overflow: hidden;
+    /* overflow: hidden; */
   }
 .toc summary {
   padding: 1rem;
@@ -180,6 +180,7 @@ https://css-tricks.com/how-to-animate-the-details-element/#:~:text=Turn%20off%20
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
+    padding-bottom:50px;
 }
 .content p, h1, h2, h3, h4, h5, div, ul, details{
     width:100%;
@@ -289,6 +290,9 @@ div.navigator{
 .mini_toc{
     list-style-type:none;
     display:flex;
+    position:sticky;
+    align-self: flex-start;
+    top:0;
     justify-content: center;
     align-items: center;
     background: #222;
